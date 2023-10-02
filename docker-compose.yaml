@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  backend_service:
+    build: ./backend
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    environment:
+      - SERVER_PORT=$SERVER_PORT
+      - JWT_EXPIRATION_IN_MS=$JWT_EXPIRATION_IN_MS
+      - JWT_SIGNING_KEY=$JWT_SIGNING_KEY
+      - SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL
+      - SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME
+      - SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD
+    networks:
+      - opcalc-net
+    volumes:
+      - .m2:/root/.m2
+  frontend_service:
+    build: ./frontend
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_BACKEND_API_URL=$REACT_APP_BACKEND_API_URL
+    networks:
+      - opcalc-net
+    depends_on:
+      - backend_service
+networks:
+  opcalc-net:
