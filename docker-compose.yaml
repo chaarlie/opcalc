@@ -3,14 +3,7 @@ services:
   backend_service:
     build: ./backend
     ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
-    environment:
-      - SERVER_PORT=$SERVER_PORT
-      - JWT_EXPIRATION_IN_MS=$JWT_EXPIRATION_IN_MS
-      - JWT_SIGNING_KEY=$JWT_SIGNING_KEY
-      - SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL
-      - SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME
-      - SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD
+      - 5000:5000
     networks:
       - opcalc-net
     volumes:

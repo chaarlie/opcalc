@@ -6,9 +6,11 @@ The main purpose of the code is to allow the user to perform basic  computations
 
 1) To run please make sure to have `docker`, `maven` and `Java` installed, since the **target** has to be generated. 
 
-1) In the root of the `backend` directory run `mvn install` or use and IDE such as IntelliJ to build the backend.
+1) In the root of the `backend` directory run `mvn install` or use and IDE such as IntelliJ to build the backend. Also modify the `application.yaml `file with the database configuration and server port
 
-1) Modify the .env.example with the appropriate environment variables
+1) Modify the .env.example with the appropriate server port 
+
+1) modify `docker-compose.yaml` with the server port
 
 1) Execute the `docker-compose up` command
 

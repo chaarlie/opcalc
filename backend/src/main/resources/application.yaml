@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url:  
+    username:  
+    password:  
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,8 +16,8 @@ server:
   error:
     whitelabel:
       enabled: false
-  port: ${SERVER_PORT}
+  port: 5000
 
 jwt:
-  signing-key: ${JWT_SIGNING_KEY}
-  expiration-in-ms: ${JWT_EXPIRATION_IN_MS}
+  signing-key: thisisaverylognstringforsecuritypurposeonly
+  expiration-in-ms: 1800000
