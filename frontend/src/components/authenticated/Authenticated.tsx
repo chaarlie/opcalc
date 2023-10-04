@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from 'react'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { GlobalContext } from '../../context/GlobalContext'
-import { useAxios } from '../../hooks'
+import { useAxios, useLocalStorage } from '../../hooks'
 import { AxiosCallData } from '../../types'
 import CurrentBalance from './CurrentBalance'
 
 function Authenticated() {
+    const [_, __, clearItemInLocal] = useLocalStorage('user-details', '')
     const { balance, setBalance, userDetails, logout } =
         useContext(GlobalContext)
     const navigate = useNavigate()
@@ -21,16 +22,21 @@ function Authenticated() {
 
     const handleLogout = () => {
         logout()
+
+        clearItemInLocal()
+
         navigate('/')
     }
 
     useEffect(() => {
-        setAxiosCallData({
-            method: 'GET',
-            url: `/user/${userDetails?.id}/balance`,
-            token: userDetails?.token,
-        })
-    }, [])
+        if (userDetails?.token) {
+            setAxiosCallData({
+                method: 'GET',
+                url: `/user/${userDetails?.id}/balance`,
+                token: userDetails?.token,
+            })
+        }
+    }, [userDetails?.token])
 
     useEffect(() => {
         if (axiosResponse?.data) {

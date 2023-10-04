@@ -1,8 +1,8 @@
 import { FormEvent, useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { GlobalContext } from '../../context/GlobalContext'
-import { AxiosCallData } from '../../types/types.d'
-import { useAxios } from '../../hooks'
+import { AxiosCallData, UserDetails } from '../../types/types.d'
+import { useAxios, useLocalStorage } from '../../hooks'
 import { SimpleAlert } from '../common'
 
 function Login() {
@@ -15,6 +15,7 @@ function Login() {
         axiosCallData?.method!,
         axiosCallData?.params,
     )
+    const [itemInLocal, setItemInLocal] = useLocalStorage('user-details', '')
     const { userDetails, setUserDetails } = useContext(GlobalContext)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -45,18 +46,22 @@ function Login() {
         if (axiosResponse && axiosResponse.status === 200) {
             setUserDetails(axiosResponse?.data)
 
-            navigate('/authenticated')
+            setItemInLocal(axiosResponse?.data)
         }
     }, [axiosResponse])
+
+    useEffect(() => {
+        const userDetailsItem = itemInLocal as UserDetails
+        if (userDetailsItem.token) {
+            navigate('/authenticated')
+        }
+    }, [itemInLocal])
     return (
         <div className="d-flex-column mx-auto col-md-6  ">
             <div className="">
                 <div className="card">
                     <div className="card-header d-flex  justify-content-center ">
                         <h3>Login to your account</h3>
-                        {axiosResponse && (
-                            <h1>{JSON.stringify(axiosResponse.status)}</h1>
-                        )}
                     </div>
                     <div className="card-body">
                         <form onSubmit={e => handleSubmit(e)}>

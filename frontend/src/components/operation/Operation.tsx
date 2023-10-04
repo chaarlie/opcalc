@@ -73,12 +73,14 @@ function Operation() {
     }
 
     useEffect(() => {
-        setOperationsCallData({
-            method: 'GET',
-            url: '/operation',
-            token: userDetails?.token,
-        })
-    }, [])
+        if (userDetails?.token) {
+            setOperationsCallData({
+                method: 'GET',
+                url: '/operation',
+                token: userDetails?.token,
+            })
+        }
+    }, [userDetails?.token])
 
     useEffect(() => {
         if (operationsResponse?.data) {

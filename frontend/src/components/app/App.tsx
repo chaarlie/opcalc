@@ -33,9 +33,7 @@ function App({ url = '/' }: AppProps) {
                             />
                             <Route
                                 path="/authenticated"
-                                element={
-                                    <PrivateRoute isAuthenticated={!!token} />
-                                }
+                                element={<PrivateRoute />}
                             >
                                 <Route index element={<Operation />} />
                                 <Route
