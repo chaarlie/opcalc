@@ -16,15 +16,12 @@ function Login() {
         axiosCallData?.params,
     )
     const [itemInLocal, setItemInLocal] = useLocalStorage('user-details', '')
-    const { userDetails, setUserDetails } = useContext(GlobalContext)
+    const { setUserDetails } = useContext(GlobalContext)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [errorMsg, setErrorMsg] = useState('')
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-        setErrorMsg('')
 
         if (username && password) {
             setAxiosCallData({
@@ -37,7 +34,6 @@ function Login() {
 
     useEffect(() => {
         if (axiosError) {
-            setErrorMsg(axiosError?.message)
             setAxiosCallData(null)
         }
     }, [axiosError])
@@ -114,8 +110,11 @@ function Login() {
                 </div>
             </div>
 
-            {errorMsg && axiosResponse && (
-                <SimpleAlert message={errorMsg} status={axiosResponse.status} />
+            {axiosError && axiosError.response && (
+                <SimpleAlert
+                    message={axiosError.message}
+                    status={axiosError.response?.status}
+                />
             )}
         </div>
     )
