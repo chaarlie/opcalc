@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useId, useMemo, useState } from 'react'
 import {
     Column,
     Table,
@@ -143,6 +143,7 @@ export default function OperationRecords() {
             ),
             header: 'Delete',
             enableColumnFilter: false,
+            id: useId(),
         }),
     ]
 
