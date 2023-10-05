@@ -210,7 +210,7 @@ function OperationRecords() {
                 <DebouncedInput
                     value={globalFilter ?? ''}
                     onChange={value => setGlobalFilter(String(value))}
-                    className="p-2 font-lg shadow border border-block"
+                    className="p-2 fs-5 shadow border border-secondary-subtle shadow-sm p-3 mb-1 bg-body-tertiary rounded"
                     placeholder="Search columns..."
                 />
             </div>
@@ -229,10 +229,6 @@ function OperationRecords() {
                                             <>
                                                 <div
                                                     {...{
-                                                        className:
-                                                            header.column.getCanSort()
-                                                                ? 'cursor-pointer select-none'
-                                                                : '',
                                                         onClick:
                                                             header.column.getToggleSortingHandler(),
                                                     }}
@@ -287,7 +283,7 @@ function OperationRecords() {
                 </tbody>
             </table>
             <div className="h-2" />
-            <div className="flex items-center gap-2">
+            <div className="d-flex align-items-center gap-2">
                 <button
                     className="border rounded p-1"
                     onClick={() => setPageNumber(0)}
