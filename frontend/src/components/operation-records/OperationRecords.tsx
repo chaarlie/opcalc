@@ -1,7 +1,5 @@
 import { useContext, useEffect, useId, useMemo, useState } from 'react'
 import {
-    Column,
-    Table,
     useReactTable,
     ColumnFiltersState,
     getCoreRowModel,
@@ -21,18 +19,9 @@ import { useAxios } from '../../hooks'
 import { AxiosCallData, OperationRecord } from '../../types'
 import { GlobalContext } from '../../context/GlobalContext'
 import { DebouncedInput } from '../common'
+import RecordFilter from './RecordFilter'
 
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-    const itemRank = rankItem(row.getValue(columnId), value)
-
-    addMeta({
-        itemRank,
-    })
-
-    return itemRank.passed
-}
-
-export default function OperationRecords() {
+function OperationRecords() {
     const { userDetails } = useContext(GlobalContext)
 
     const [operationRecords, setOperationRecords] = useState(() => [])
@@ -177,6 +166,16 @@ export default function OperationRecords() {
         })
     }
 
+    const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+        const itemRank = rankItem(row.getValue(columnId), value)
+
+        addMeta({
+            itemRank,
+        })
+
+        return itemRank.passed
+    }
+
     const table = useReactTable({
         data: operationRecords,
         columns,
@@ -252,7 +251,7 @@ export default function OperationRecords() {
                                                 </div>
                                                 {header.column.getCanFilter() ? (
                                                     <div>
-                                                        <Filter
+                                                        <RecordFilter
                                                             column={
                                                                 header.column
                                                             }
@@ -318,87 +317,4 @@ export default function OperationRecords() {
     )
 }
 
-function Filter({
-    column,
-    table,
-}: {
-    column: Column<any, unknown>
-    table: Table<any>
-}) {
-    const firstValue = table
-        .getPreFilteredRowModel()
-        .flatRows[0]?.getValue(column.id)
-
-    const columnFilterValue = column.getFilterValue()
-
-    const sortedUniqueValues = useMemo(
-        () =>
-            typeof firstValue === 'number'
-                ? []
-                : Array.from(column.getFacetedUniqueValues().keys()).sort(),
-        [column.getFacetedUniqueValues()],
-    )
-
-    return typeof firstValue === 'number' ? (
-        <div>
-            <div className="flex space-x-2">
-                <DebouncedInput
-                    type="number"
-                    min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-                    max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-                    value={(columnFilterValue as [number, number])?.[0] ?? ''}
-                    onChange={value =>
-                        column.setFilterValue((old: [number, number]) => [
-                            value,
-                            old?.[1],
-                        ])
-                    }
-                    placeholder={`Min ${
-                        column.getFacetedMinMaxValues()?.[0]
-                            ? `(${column.getFacetedMinMaxValues()?.[0]})`
-                            : ''
-                    }`}
-                    className="w-24 border shadow rounded"
-                />
-                <DebouncedInput
-                    type="number"
-                    min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-                    max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-                    value={(columnFilterValue as [number, number])?.[1] ?? ''}
-                    onChange={value =>
-                        column.setFilterValue((old: [number, number]) => [
-                            old?.[0],
-                            value,
-                        ])
-                    }
-                    placeholder={`Max ${
-                        column.getFacetedMinMaxValues()?.[1]
-                            ? `(${column.getFacetedMinMaxValues()?.[1]})`
-                            : ''
-                    }`}
-                    className="w-24 border shadow rounded"
-                />
-            </div>
-            <div className="h-1" />
-        </div>
-    ) : (
-        <>
-            <datalist id={column.id + 'list'}>
-                {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-                    <option value={value} key={value} />
-                ))}
-            </datalist>
-            <DebouncedInput
-                type="text"
-                value={(columnFilterValue ?? '') as string}
-                onChange={value => column.setFilterValue(value)}
-                placeholder={`Search... (${
-                    column.getFacetedUniqueValues().size
-                })`}
-                className="w-36 border shadow rounded"
-                list={column.id + 'list'}
-            />
-            <div className="h-1" />
-        </>
-    )
-}
+export default OperationRecords
