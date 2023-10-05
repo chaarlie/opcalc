@@ -154,16 +154,26 @@ function OperationRecords() {
 
     const handleNextPageClick = (amount: number) => {
         setPageNumber((val: number) => {
-            let result = amount + val
+            let result = val
 
             if (amount > 0) {
-                result = result >= totalPages ? totalPages : result
+                result = result === totalPages - 1 ? totalPages - 2 : result
             } else {
-                result = 0
+                result = result <= 0 ? 1 : result
             }
+
+            result += amount
 
             return result
         })
+    }
+
+    const handlePreviousPage = () => {
+        handleNextPageClick(-1)
+    }
+
+    const handleNextPage = () => {
+        handleNextPageClick(1)
     }
 
     const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -199,9 +209,6 @@ function OperationRecords() {
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
         getFacetedMinMaxValues: getFacetedMinMaxValues(),
-        debugTable: true,
-        debugHeaders: true,
-        debugColumns: false,
     })
 
     return (
@@ -292,13 +299,13 @@ function OperationRecords() {
                 </button>
                 <button
                     className="border rounded p-1"
-                    onClick={() => handleNextPageClick(-1)}
+                    onClick={() => handlePreviousPage()}
                 >
                     {'<'}
                 </button>
                 <button
                     className="border rounded p-1"
-                    onClick={() => handleNextPageClick(1)}
+                    onClick={() => handleNextPage()}
                 >
                     {'>'}
                 </button>
