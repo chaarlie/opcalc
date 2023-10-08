@@ -1,3 +1,4 @@
 import OperationRecords from './OperationRecords'
+import RecordFilter from './RecordFilter'
 
-export { OperationRecords }
+export { OperationRecords, RecordFilter }

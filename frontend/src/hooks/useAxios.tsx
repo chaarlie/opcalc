@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, SetStateAction } from 'react'
 import { AxiosError, AxiosResponse, Method } from 'axios'
 import { axiosInstance } from '../config'
 
@@ -16,24 +16,17 @@ const useAxios = (
 
     useEffect(() => {
         if (url) {
-            let promiseResult = null
-            switch (method.toLocaleLowerCase()) {
-                case 'get':
-                    promiseResult = axiosInstance(token).get(url)
-                    break
-                case 'post':
-                    promiseResult = axiosInstance(token).post(url, params)
-                    break
-                case 'delete':
-                    promiseResult = axiosInstance(token).delete(url, params)
-                    break
-            }
-
-            promiseResult
+            const invokedMethod = method.toLowerCase()
+            //@ts-ignore
+            axiosInstance(token)
+                [invokedMethod](url, params)
                 ?.then((response: AxiosResponse) => {
                     setAxiosResponse(response)
                 })
-                .catch(error => setAxiosError(error))
+                .catch(
+                    (error: SetStateAction<AxiosError<unknown, any> | null>) =>
+                        setAxiosError(error),
+                )
                 .finally(() => setIsLoading(false))
         }
     }, [url])
